@@ -34,6 +34,16 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const register = async (name, email, password) => {
+    const { data } = await authService.publicRegister({ name, email, password });
+    if (data.success) {
+      localStorage.setItem('turnotopia_token', data.data.token);
+      localStorage.setItem('turnotopia_user', JSON.stringify(data.data.user));
+      setUser(data.data.user);
+    }
+    return data;
+  };
+
   const logout = () => {
     localStorage.removeItem('turnotopia_token');
     localStorage.removeItem('turnotopia_user');
@@ -41,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

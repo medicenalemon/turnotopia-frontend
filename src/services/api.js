@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api' });
+const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('turnotopia_token');
@@ -22,6 +22,7 @@ api.interceptors.response.use(
 
 export const authService = {
   login: (data) => api.post('/auth/login', data),
+  publicRegister: (data) => api.post('/auth/public-register', data),
   getMe: () => api.get('/auth/me'),
   register: (data) => api.post('/auth/register', data),
   updatePassword: (data) => api.put('/auth/password', data),

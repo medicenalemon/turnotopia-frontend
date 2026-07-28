@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import MainLayout from './components/layout/MainLayout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Appointments from './pages/Appointments';
 import Patients from './pages/Patients';
@@ -28,6 +29,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
+      <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
       <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/appointments" element={<Appointments />} />

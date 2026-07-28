@@ -2,25 +2,26 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiUserPlus } from 'react-icons/fi';
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) return toast.error('Complete todos los campos');
+    if (!name || !email || !password) return toast.error('Complete todos los campos');
     setLoading(true);
     try {
-      await login(email, password);
-      toast.success('¡Bienvenido a Turnotopia!');
+      await register(name, email, password);
+      toast.success('¡Registro exitoso! Bienvenido a Turnotopia.');
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al iniciar sesión');
+      toast.error(err.response?.data?.message || 'Error al registrarse');
     } finally { setLoading(false); }
   };
 
@@ -36,32 +37,36 @@ export default function Login() {
           <h1 className="login-title" style={{ display: 'flex', gap: '0', background: 'none', WebkitTextFillColor: 'initial', fontSize: '2.2rem', letterSpacing: '-1px', margin: '0 0 8px 0' }}>
             <span style={{ color: '#00CFE8' }}>turno</span><span style={{ color: '#84FF00' }}>topia</span>
           </h1>
-          <p className="login-subtitle">Sistema de Gestión de Turnos Médicos</p>
+          <p className="login-subtitle">Crear una nueva cuenta</p>
         </div>
         <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label className="form-label">Nombre Completo</label>
+            <div style={{ position: 'relative' }}>
+              <FiUser style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input type="text" className="form-input" style={{ paddingLeft: 40 }} placeholder="Tu nombre" value={name} onChange={e => setName(e.target.value)} id="register-name" />
+            </div>
+          </div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <div style={{ position: 'relative' }}>
               <FiMail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              <input type="email" className="form-input" style={{ paddingLeft: 40 }} placeholder="admin@turnotopia.local" value={email} onChange={e => setEmail(e.target.value)} id="login-email" />
+              <input type="email" className="form-input" style={{ paddingLeft: 40 }} placeholder="correo@ejemplo.com" value={email} onChange={e => setEmail(e.target.value)} id="register-email" />
             </div>
           </div>
           <div className="form-group">
             <label className="form-label">Contraseña</label>
             <div style={{ position: 'relative' }}>
               <FiLock style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              <input type="password" className="form-input" style={{ paddingLeft: 40 }} placeholder="••••••" value={password} onChange={e => setPassword(e.target.value)} id="login-password" />
+              <input type="password" className="form-input" style={{ paddingLeft: 40 }} placeholder="Mínimo 6 caracteres" value={password} onChange={e => setPassword(e.target.value)} id="register-password" />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 8 }} disabled={loading} id="login-submit">
-            {loading ? <span className="spinner spinner-sm" /> : <><FiLogIn /> Ingresar</>}
+          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 8 }} disabled={loading} id="register-submit">
+            {loading ? <span className="spinner spinner-sm" /> : <><FiUserPlus /> Registrarse</>}
           </button>
         </form>
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 24 }}>
-          Demo: admin@turnotopia.local / admin123
-        </p>
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: 16 }}>
-          ¿No tienes cuenta? <Link to="/register" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Regístrate aquí</Link>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: 24 }}>
+          ¿Ya tienes cuenta? <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Ingresa aquí</Link>
         </p>
       </div>
 
@@ -71,7 +76,6 @@ export default function Login() {
         .login-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%); }
         .login-card { position: relative; z-index: 1; background: var(--bg-card); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg), 0 0 60px rgba(6, 182, 212, 0.05); }
         .login-logo { text-align: center; margin-bottom: 32px; }
-        .login-logo-icon { width: 64px; height: 64px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--primary), var(--accent)); display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(6, 182, 212, 0.3); }
         .login-title { font-size: 1.75rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-light), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
         .login-subtitle { color: var(--text-muted); font-size: 0.85rem; }
         .login-form { display: flex; flex-direction: column; }
