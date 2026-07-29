@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiHome, FiList, FiCalendar, FiUsers, FiUserPlus, FiGrid, FiFileText, FiClock, FiDollarSign, FiLogOut, FiMenu, FiX, FiShield, FiBarChart2 } from 'react-icons/fi';
+import { FiHome, FiList, FiCalendar, FiUsers, FiUserPlus, FiGrid, FiFileText, FiClock, FiDollarSign, FiLogOut, FiMenu, FiX, FiShield, FiBarChart2, FiInfo } from 'react-icons/fi';
 import { useState } from 'react';
 
 const navItems = [
@@ -13,6 +13,10 @@ const navItems = [
   { path: '/specialties', label: 'Especialidades', icon: FiGrid },
   { path: '/medical-records', label: 'Historias Clínicas', icon: FiFileText },
   { path: '/billing', label: 'Facturación', icon: FiDollarSign },
+];
+
+const systemItems = [
+  { path: '/about', label: 'Acerca de', icon: FiInfo },
 ];
 
 const adminItems = [
@@ -75,6 +79,19 @@ export default function Sidebar() {
               ))}
             </>
           )}
+
+          <div style={{ height: 1, background: 'var(--border)', margin: '8px 0' }} />
+          {systemItems.map(({ path, label, icon: Icon }) => (
+            <NavLink
+              key={path}
+              to={path}
+              className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon className="sidebar-link-icon" />
+              <span>{label}</span>
+            </NavLink>
+          ))}
         </nav>
 
         <div className="sidebar-footer">

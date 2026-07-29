@@ -14,6 +14,7 @@ import WaitingRoom from './pages/WaitingRoom';
 import Billing from './pages/Billing';
 import Users from './pages/Users';
 import Reports from './pages/Reports';
+import About from './pages/About';
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/billing" element={<Billing />} />
         <Route path="/users" element={<Users />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/about" element={<About />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
