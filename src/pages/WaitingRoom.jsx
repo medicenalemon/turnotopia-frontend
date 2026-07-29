@@ -9,30 +9,36 @@ const WR_STATUS = {
   attended: { label: 'Atendido', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
 };
 
-function TimeElapsed({ since }) {
+function TimeElapsed({ since, until }) {
   const [elapsed, setElapsed] = useState('');
   const intervalRef = useRef(null);
 
   useEffect(() => {
     if (!since) { setElapsed(''); return; }
     const update = () => {
-      const diff = Math.floor((Date.now() - new Date(since).getTime()) / 1000);
+      const end = until ? new Date(until).getTime() : Date.now();
+      const diff = Math.floor((end - new Date(since).getTime()) / 1000);
       const h = Math.floor(diff / 3600);
       const m = Math.floor((diff % 3600) / 60);
       const s = diff % 60;
       setElapsed(h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${s}s` : `${s}s`);
     };
     update();
-    intervalRef.current = setInterval(update, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [since]);
+    if (!until) {
+      intervalRef.current = setInterval(update, 1000);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [since, until]);
 
   return <span>{elapsed}</span>;
 }
 
-function getWaitClass(since) {
+function getWaitClass(since, until) {
   if (!since) return '';
-  const mins = (Date.now() - new Date(since).getTime()) / 60000;
+  const end = until ? new Date(until).getTime() : Date.now();
+  const mins = (end - new Date(since).getTime()) / 60000;
   if (mins > 30) return 'wr-wait-danger';
   if (mins > 15) return 'wr-wait-warning';
   return 'wr-wait-ok';
@@ -90,15 +96,15 @@ export default function WaitingRoom() {
         <span>{apt.doctor?.specialty?.name}</span>
       </div>
       {apt.waitingRoom?.checkedInAt && (
-        <div className={`wr-timer ${getWaitClass(apt.waitingRoom.checkedInAt)}`}>
+        <div className={`wr-timer ${getWaitClass(apt.waitingRoom.checkedInAt, apt.waitingRoom.calledAt)}`}>
           <FiClock style={{ marginRight: 4 }} />
-          Espera: <TimeElapsed since={apt.waitingRoom.checkedInAt} />
+          Espera: <TimeElapsed since={apt.waitingRoom.checkedInAt} until={apt.waitingRoom.calledAt} />
         </div>
       )}
-      {apt.waitingRoom?.status === 'in-consultation' && apt.waitingRoom?.calledAt && (
+      {(apt.waitingRoom?.status === 'in-consultation' || apt.waitingRoom?.status === 'attended') && apt.waitingRoom?.calledAt && (
         <div className="wr-timer" style={{ color: 'var(--accent-light)' }}>
           <FiActivity style={{ marginRight: 4 }} />
-          En consulta: <TimeElapsed since={apt.waitingRoom.calledAt} />
+          En consulta: <TimeElapsed since={apt.waitingRoom.calledAt} until={apt.waitingRoom.completedAt} />
         </div>
       )}
       <div className="wr-card-actions">{actions}</div>
