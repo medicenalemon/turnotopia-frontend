@@ -242,7 +242,7 @@ export default function Calendar() {
         .cal-event-name { font-weight: 600; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .cal-event-doctor { font-size: 0.68rem; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .cal-popover-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); animation: fadeIn 0.15s; }
-        .cal-popover { min-width: 300px; max-width: 380px; animation: scaleIn 0.2s ease-out; }
+        .cal-popover { min-width: 280px; max-width: 90vw; width: 100%; animation: scaleIn 0.2s ease-out; }
         @media (max-width: 768px) {
           .cal-header, .cal-grid-inner { grid-template-columns: 40px repeat(6, 1fr); }
           .cal-time-label { font-size: 0.65rem; padding-right: 4px; }

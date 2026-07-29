@@ -70,6 +70,7 @@ export default function Login() {
         .login-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 25%, #16213e 50%, #0f172a 100%); background-size: 400% 400%; animation: gradientShift 15s ease infinite; }
         .login-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%); }
         .login-card { position: relative; z-index: 1; background: var(--bg-card); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg), 0 0 60px rgba(6, 182, 212, 0.05); }
+        @media (max-width: 480px) { .login-card { padding: 32px 24px; } }
         .login-logo { text-align: center; margin-bottom: 32px; }
         .login-logo-icon { width: 64px; height: 64px; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--primary), var(--accent)); display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(6, 182, 212, 0.3); }
         .login-title { font-size: 1.75rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-light), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
