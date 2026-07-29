@@ -22,6 +22,7 @@ api.interceptors.response.use(
 
 export const authService = {
   login: (data) => api.post('/auth/login', data),
+  patientLogin: (data) => api.post('/auth/patient-login', data),
   publicRegister: (data) => api.post('/auth/public-register', data),
   getMe: () => api.get('/auth/me'),
   register: (data) => api.post('/auth/register', data),
@@ -43,6 +44,11 @@ export const appointmentService = {
   checkin: (id) => api.patch(`/appointments/${id}/checkin`),
   call: (id) => api.patch(`/appointments/${id}/call`),
   completeVisit: (id) => api.patch(`/appointments/${id}/complete-visit`),
+  getPatientMeAppointments: () => api.get('/appointments/patient/me'),
+};
+
+export const publicService = {
+  checkin: (dni) => api.post('/public/checkin', { dni }),
 };
 
 export const doctorService = {

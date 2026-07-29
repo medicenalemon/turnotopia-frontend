@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { appointmentService } from '../services/api';
 import toast from 'react-hot-toast';
-import { FiClock, FiLogIn, FiPhone, FiCheckCircle, FiUser, FiActivity } from 'react-icons/fi';
+import { FiClock, FiLogIn, FiPhone, FiCheckCircle, FiUser, FiActivity, FiX } from 'react-icons/fi';
 
 const WR_STATUS = {
   waiting: { label: 'Esperando', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
@@ -47,6 +47,7 @@ function getWaitClass(since, until) {
 export default function WaitingRoom() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showQR, setShowQR] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -117,6 +118,7 @@ export default function WaitingRoom() {
         <div>
           <h1 className="page-title">Sala de Espera</h1>
           <p className="page-subtitle">Gestión de pacientes en tiempo real — {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+          <button className="btn btn-primary btn-sm" style={{ marginTop: '12px' }} onClick={() => setShowQR(true)}>🖨️ Ver QR de Fila Virtual</button>
         </div>
         <div className="wr-stats-row">
           <div className="wr-stat"><span className="wr-stat-num" style={{ color: 'var(--text-muted)' }}>{pending.length}</span><span className="wr-stat-label">Sin check-in</span></div>
@@ -164,6 +166,30 @@ export default function WaitingRoom() {
               <FiCheckCircle /> Atendidos <span className="wr-count">{attended.length}</span>
             </div>
             {attended.length === 0 ? <div className="wr-empty">Sin atendidos aún</div> : attended.map(a => renderCard(a, null))}
+          </div>
+        </div>
+      )}
+
+      {showQR && (
+        <div className="modal-overlay">
+          <div className="modal fade-in" style={{ maxWidth: '400px', textAlign: 'center' }}>
+            <div className="modal-header">
+              <h2>QR Fila Virtual</h2>
+              <button className="btn-close" onClick={() => setShowQR(false)}><FiX /></button>
+            </div>
+            <div className="modal-content" style={{ padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+              <p style={{ color: 'var(--text-secondary)' }}>Imprime este QR y colócalo en la sala de espera para que los pacientes hagan su propio check-in.</p>
+              <div style={{ padding: '16px', background: 'white', borderRadius: '12px' }}>
+                <img 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(window.location.origin + '/check-in')}`} 
+                  alt="QR Fila Virtual" 
+                  style={{ width: '250px', height: '250px', display: 'block' }} 
+                />
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                Ruta: {window.location.origin}/check-in
+              </p>
+            </div>
           </div>
         </div>
       )}

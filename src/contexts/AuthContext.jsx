@@ -34,6 +34,16 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const patientLogin = async (dni, email) => {
+    const { data } = await authService.patientLogin({ dni, email });
+    if (data.success) {
+      localStorage.setItem('turnotopia_token', data.data.token);
+      localStorage.setItem('turnotopia_user', JSON.stringify(data.data.user));
+      setUser(data.data.user);
+    }
+    return data;
+  };
+
   const register = async (name, email, password) => {
     const { data } = await authService.publicRegister({ name, email, password });
     if (data.success) {
@@ -51,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, patientLogin, register, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
