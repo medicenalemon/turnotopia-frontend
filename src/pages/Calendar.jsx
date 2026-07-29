@@ -66,8 +66,9 @@ export default function Calendar() {
 
   const getAppointmentsForDay = (day) => {
     return appointments.filter(a => {
-      const aptDate = new Date(a.date);
-      return isSameDay(aptDate, day);
+      // a.date comes as ISO string, e.g. "2026-07-29T00:00:00.000Z"
+      // Compare the YYYY-MM-DD part directly to avoid timezone shift
+      return a.date.substring(0, 10) === format(day, 'yyyy-MM-dd');
     });
   };
 
