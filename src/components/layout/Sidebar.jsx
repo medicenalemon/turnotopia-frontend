@@ -38,13 +38,11 @@ export default function Sidebar() {
         <div className="sidebar-header">
           <div className="sidebar-logo">
             <div style={{ position: 'relative', width: '36px', height: '36px', flexShrink: 0 }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '50%', backgroundColor: '#ffffff' }}></div>
-              <div style={{ position: 'absolute', bottom: 0, right: 0, width: '50%', height: '50%', backgroundColor: '#ffffff', borderBottomLeftRadius: '100%' }}></div>
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '50%', backgroundColor: '#00CFE8' }}></div>
+              <div style={{ position: 'absolute', bottom: 0, right: 0, width: '50%', height: '50%', backgroundColor: '#84FF00', borderBottomLeftRadius: '100%' }}></div>
             </div>
-            <div>
-              <div className="logo-text" style={{ background: 'none', WebkitTextFillColor: 'initial', color: '#ffffff', fontSize: '1.25rem', letterSpacing: '-0.5px', marginTop: '6px' }}>
-                turnotopia
-              </div>
+            <div className="logo-text" style={{ background: 'none', WebkitTextFillColor: 'initial', fontSize: '1.6rem', fontWeight: '800', letterSpacing: '-1px', lineHeight: 1 }}>
+              <span style={{ color: '#00CFE8' }}>turno</span><span style={{ color: '#84FF00' }}>topia</span>
             </div>
           </div>
         </div>

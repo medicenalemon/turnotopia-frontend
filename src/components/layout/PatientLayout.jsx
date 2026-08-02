@@ -9,15 +9,13 @@ export default function PatientLayout() {
     <div className="patient-layout">
       <header className="patient-header">
         <div className="patient-header-container">
-          <div className="sidebar-logo">
-            <div style={{ position: 'relative', width: '30px', height: '30px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ position: 'relative', width: '32px', height: '32px', flexShrink: 0 }}>
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '50%', backgroundColor: '#00CFE8' }}></div>
               <div style={{ position: 'absolute', bottom: 0, right: 0, width: '50%', height: '50%', backgroundColor: '#84FF00', borderBottomLeftRadius: '100%' }}></div>
             </div>
-            <div>
-              <div className="logo-text" style={{ background: 'none', WebkitTextFillColor: 'initial', color: '#fff', fontSize: '1.2rem', letterSpacing: '-0.5px', marginTop: '4px' }}>
-                turnotopia
-              </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '-1px', lineHeight: 1 }}>
+              <span style={{ color: '#00CFE8' }}>turno</span><span style={{ color: '#84FF00' }}>topia</span>
             </div>
           </div>
           

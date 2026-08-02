@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { appointmentService } from '../../services/api';
+import { appointmentService } from '../services/api';
 import { FiCalendar, FiClock, FiFileText, FiDownload } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
