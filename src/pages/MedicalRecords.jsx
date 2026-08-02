@@ -26,6 +26,12 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+/**
+ * Página de Historias Clínicas.
+ * Posee dos vistas: 
+ * 1) Buscador de pacientes.
+ * 2) Línea de tiempo de registros clínicos del paciente seleccionado.
+ */
 export default function MedicalRecords() {
   const [patients, setPatients] = useState([]);
   const [search, setSearch] = useState('');
@@ -42,6 +48,7 @@ export default function MedicalRecords() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ doctor: '', date: new Date().toISOString().split('T')[0], type: 'consultation', diagnosis: '', symptoms: '', treatment: '', prescriptions: '', notes: '', bloodPressure: '', temperature: '', weight: '', height: '', heartRate: '' });
 
+  // Busca la lista de pacientes (Vista 1)
   const fetchPatients = useCallback(async () => {
     setLoadingPatients(true);
     try {
@@ -55,6 +62,7 @@ export default function MedicalRecords() {
   useEffect(() => { fetchPatients(); }, [fetchPatients]);
   useEffect(() => { setPage(1); }, [search]);
 
+  // Busca el historial clínico completo de un paciente (Vista 2)
   const fetchRecords = async (patientId) => {
     setLoadingRecords(true);
     try {
@@ -102,6 +110,7 @@ export default function MedicalRecords() {
     setShowModal(true);
   };
 
+  // Maneja la creación o edición de un registro clínico
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.doctor) return toast.error('Debe seleccionar un médico');

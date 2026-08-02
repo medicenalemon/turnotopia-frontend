@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Efecto que carga las estadísticas globales al montar el componente
   useEffect(() => {
     dashboardService.getStats()
       .then(res => setStats(res.data.data))

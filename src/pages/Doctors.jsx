@@ -5,6 +5,10 @@ import { FiPlus, FiEdit2, FiTrash2, FiUserPlus } from 'react-icons/fi';
 
 const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
+/**
+ * Página de gestión de Médicos (Staff).
+ * Permite listar, crear y configurar médicos y sus horarios de atención.
+ */
 export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
   const [specialties, setSpecialties] = useState([]);
@@ -14,6 +18,7 @@ export default function Doctors() {
   const [form, setForm] = useState({ name: '', email: '', password: '', specialty: '', licenseNumber: '', phone: '', schedule: [] });
   const [filterSpec, setFilterSpec] = useState('');
 
+  // Carga la lista de médicos y especialidades
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -42,6 +47,7 @@ export default function Doctors() {
     setForm(f => ({ ...f, schedule: [...f.schedule, { dayOfWeek: 1, startTime: '08:00', endTime: '17:00', slotDuration: 30 }] }));
   };
 
+  // Actualiza una propiedad de un bloque horario específico (ej. cambiar día o duración)
   const updateSchedule = (idx, field, value) => {
     setForm(f => {
       const s = [...f.schedule];
@@ -52,6 +58,7 @@ export default function Doctors() {
 
   const removeSchedule = (idx) => { setForm(f => ({ ...f, schedule: f.schedule.filter((_, i) => i !== idx) })); };
 
+  // Maneja la creación o actualización de un médico (CRUD)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.specialty || !form.licenseNumber) return toast.error('Complete los campos obligatorios');

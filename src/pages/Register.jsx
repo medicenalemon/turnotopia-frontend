@@ -4,6 +4,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiUser, FiUserPlus } from 'react-icons/fi';
 
+/**
+ * Página de registro público para nuevos pacientes/usuarios.
+ */
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,11 +15,13 @@ export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Maneja el envío del formulario de registro
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !password) return toast.error('Complete todos los campos');
     setLoading(true);
     try {
+      // Llama a la función register del AuthContext
       await register(name, email, password);
       toast.success('¡Registro exitoso! Bienvenido a Turnotopia.');
       navigate('/');

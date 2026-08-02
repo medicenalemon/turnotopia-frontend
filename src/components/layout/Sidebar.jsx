@@ -1,8 +1,13 @@
+/**
+ * Componente de barra lateral (Sidebar) para navegación.
+ * Renderiza dinámicamente los enlaces según el rol del usuario.
+ */
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { FiHome, FiList, FiCalendar, FiUsers, FiUserPlus, FiGrid, FiFileText, FiClock, FiDollarSign, FiLogOut, FiMenu, FiX, FiShield, FiBarChart2, FiInfo } from 'react-icons/fi';
 import { useState } from 'react';
 
+// Rutas accesibles para personal médico y recepcionistas
 const navItems = [
   { path: '/', label: 'Dashboard', icon: FiHome },
   { path: '/appointments', label: 'Turnos', icon: FiList },
@@ -19,6 +24,7 @@ const systemItems = [
   { path: '/about', label: 'Acerca de', icon: FiInfo },
 ];
 
+// Rutas exclusivas para el rol de administrador
 const adminItems = [
   { path: '/users', label: 'Gestión de Usuarios', icon: FiShield },
   { path: '/reports', label: 'Reportes', icon: FiBarChart2 },
@@ -26,6 +32,7 @@ const adminItems = [
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  // Estado para controlar la apertura del menú en dispositivos móviles
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 

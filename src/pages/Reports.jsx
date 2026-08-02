@@ -23,6 +23,10 @@ const statusLabels = {
   'no-show': 'Ausente'
 };
 
+/**
+ * Módulo de Estadísticas y Reportes.
+ * Visualización de datos mediante gráficos interactivos y exportación a PDF.
+ */
 export default function Reports() {
   const [reports, setReports] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,6 +79,7 @@ export default function Reports() {
     };
   };
 
+  // Petición de datos al servidor basado en el rango de fechas calculado
   const fetchReports = async () => {
     setLoading(true);
     try {
@@ -93,6 +98,7 @@ export default function Reports() {
     }
   };
 
+  // Función compleja: Genera un PDF capturando el HTML de los gráficos y dibujando tablas nativas
   const exportToPDF = async () => {
     if (!reports) {
       toast.error('No hay datos para exportar');

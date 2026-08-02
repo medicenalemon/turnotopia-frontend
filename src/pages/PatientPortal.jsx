@@ -4,6 +4,9 @@ import { FiCalendar, FiClock, FiFileText, FiDownload } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
 
+/**
+ * Portal del Paciente donde pueden ver sus turnos y descargar recetas médicas.
+ */
 export default function PatientPortal() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +15,7 @@ export default function PatientPortal() {
     fetchAppointments();
   }, []);
 
+  // Obtiene los turnos asignados al paciente actual
   const fetchAppointments = async () => {
     try {
       const { data } = await appointmentService.getPatientMeAppointments();
@@ -23,6 +27,7 @@ export default function PatientPortal() {
     }
   };
 
+  // Genera y descarga un PDF de receta médica digital
   const handleDownloadRecipe = (apt) => {
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");

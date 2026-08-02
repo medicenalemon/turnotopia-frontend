@@ -21,6 +21,10 @@ function timeToMinutes(t) {
   return h * 60 + m;
 }
 
+/**
+ * Vista de Calendario semanal.
+ * Muestra los turnos en un grid de tiempo con navegación por semanas.
+ */
 export default function Calendar() {
   const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [appointments, setAppointments] = useState([]);
@@ -32,6 +36,7 @@ export default function Calendar() {
 
   const days = Array.from({ length: 6 }, (_, i) => addDays(currentWeek, i)); // Lun-Sáb
 
+  // Carga los turnos para la semana actualmente visible
   const fetchAppointments = useCallback(async () => {
     setLoading(true);
     try {
@@ -64,6 +69,7 @@ export default function Calendar() {
   const nextWeek = () => setCurrentWeek(w => addWeeks(w, 1));
   const goToday = () => setCurrentWeek(startOfWeek(new Date(), { weekStartsOn: 1 }));
 
+  // Filtra los turnos de la semana para asignar a una columna de día específico
   const getAppointmentsForDay = (day) => {
     return appointments.filter(a => {
       // a.date comes as ISO string, e.g. "2026-07-29T00:00:00.000Z"
@@ -74,6 +80,7 @@ export default function Calendar() {
 
   const weekLabel = `${format(days[0], "d 'de' MMMM", { locale: es })} — ${format(days[5], "d 'de' MMMM, yyyy", { locale: es })}`;
 
+  // Cambia el estado de un turno desde el popover del calendario
   const changeStatus = async (id, status) => {
     try {
       await appointmentService.updateStatus(id, status);

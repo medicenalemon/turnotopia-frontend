@@ -19,6 +19,10 @@ const STATUS_ACTIONS = {
   'in-progress': ['completed'],
 };
 
+/**
+ * Página de gestión de Turnos.
+ * Permite listar, filtrar, crear y cambiar el estado de los turnos médicos.
+ */
 export default function Appointments() {
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -35,6 +39,7 @@ export default function Appointments() {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [newApt, setNewApt] = useState({ patient: '', doctor: '', specialty: '', date: format(new Date(), 'yyyy-MM-dd'), startTime: '', endTime: '', reason: '' });
 
+  // Obtiene la lista de turnos aplicando los filtros actuales (fecha, médico, estado)
   const fetchAppointments = useCallback(async () => {
     setLoading(true);
     try {
@@ -72,6 +77,7 @@ export default function Appointments() {
       .catch(() => setAvailableSlots([]));
   }, [newApt.doctor, newApt.date]);
 
+  // Cambia el estado de un turno específico (ej. de Programado a Confirmado)
   const changeStatus = async (id, status) => {
     try {
       await appointmentService.updateStatus(id, status);

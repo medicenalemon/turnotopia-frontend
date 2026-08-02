@@ -1,3 +1,7 @@
+/**
+ * Archivo principal de la aplicación React.
+ * Configura los proveedores globales: Router, Contexto de Autenticación y Alertas (Toaster).
+ */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'

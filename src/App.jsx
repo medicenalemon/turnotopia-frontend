@@ -1,3 +1,7 @@
+/**
+ * Componente raíz de la aplicación.
+ * Gestiona el enrutamiento y la protección de rutas basada en roles.
+ */
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import MainLayout from './components/layout/MainLayout';
@@ -20,8 +24,16 @@ import About from './pages/About';
 import PatientPortal from './pages/PatientPortal';
 import CheckIn from './pages/CheckIn';
 
+/**
+ * Componente envoltorio para proteger rutas privadas.
+ * @param {Object} props - Propiedades del componente.
+ * @param {ReactNode} props.children - Componentes hijos a renderizar si se cumple la autorización.
+ * @param {Array<string>} [props.allowedRoles] - Roles permitidos para acceder a la ruta.
+ */
 function PrivateRoute({ children, allowedRoles }) {
+  // Obtener el estado de autenticación desde el contexto
   const { isAuthenticated, loading, user } = useAuth();
+  
   if (loading) return <div className="loading-container"><div className="spinner" /></div>;
   if (!isAuthenticated) return <Navigate to="/login" />;
   
@@ -39,6 +51,7 @@ export default function App() {
 
   return (
     <Routes>
+      {/* Redirección automática si el usuario ya está autenticado */}
       <Route path="/login" element={isAuthenticated ? <Navigate to={user?.role === 'patient' ? '/portal' : '/'} /> : <Login />} />
       <Route path="/patient-login" element={isAuthenticated ? <Navigate to={user?.role === 'patient' ? '/portal' : '/'} /> : <PatientLogin />} />
       <Route path="/register" element={isAuthenticated ? <Navigate to={user?.role === 'patient' ? '/portal' : '/'} /> : <Register />} />

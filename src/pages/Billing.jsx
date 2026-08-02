@@ -15,6 +15,10 @@ const METHODS = {
   cash: 'Efectivo', debit: 'Débito', credit: 'Crédito', transfer: 'Transferencia', insurance: 'Obra Social'
 };
 
+/**
+ * Módulo de Facturación y Cobros.
+ * Permite registrar pagos, crear facturas y ver métricas financieras.
+ */
 export default function Billing() {
   const [invoices, setInvoices] = useState([]);
   const [stats, setStats] = useState(null);
@@ -36,6 +40,7 @@ export default function Billing() {
   // Payment form
   const [payment, setPayment] = useState({ amount: '', method: 'cash', reference: '' });
 
+  // Obtiene la lista de facturas aplicando filtros de estado y rango de fechas
   const fetchInvoices = useCallback(async () => {
     setLoading(true);
     try {
@@ -83,6 +88,7 @@ export default function Billing() {
     } catch (err) { toast.error(err.response?.data?.message || 'Error creando factura'); }
   };
 
+  // Registra un nuevo pago para una factura existente
   const handlePayment = async (e) => {
     e.preventDefault();
     if (!payment.amount || Number(payment.amount) <= 0) return toast.error('Ingrese un monto válido');

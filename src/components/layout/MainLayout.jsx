@@ -1,3 +1,7 @@
+/**
+ * Layout principal de la aplicación para personal médico y administrativo.
+ * Contiene la barra lateral (Sidebar) y el área de contenido principal.
+ */
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 

@@ -3,6 +3,10 @@ import { patientService } from '../services/api';
 import toast from 'react-hot-toast';
 import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiUser, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
+/**
+ * Página de gestión de Pacientes.
+ * Permite buscar, listar, crear y editar el padrón de pacientes.
+ */
 export default function Patients() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +17,7 @@ export default function Patients() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', dni: '', email: '', phone: '', dateOfBirth: '', address: '', medicalInsurance: '', insuranceNumber: '', notes: '' });
 
+  // Obtiene los pacientes con paginación y filtro de búsqueda
   const fetchPatients = useCallback(async () => {
     setLoading(true);
     try {
@@ -29,6 +34,7 @@ export default function Patients() {
   const openCreate = () => { setEditing(null); setForm({ firstName: '', lastName: '', dni: '', email: '', phone: '', dateOfBirth: '', address: '', medicalInsurance: '', insuranceNumber: '', notes: '' }); setShowModal(true); };
   const openEdit = (p) => { setEditing(p); setForm({ firstName: p.firstName, lastName: p.lastName, dni: p.dni, email: p.email || '', phone: p.phone || '', dateOfBirth: p.dateOfBirth ? p.dateOfBirth.split('T')[0] : '', address: p.address || '', medicalInsurance: p.medicalInsurance || '', insuranceNumber: p.insuranceNumber || '', notes: p.notes || '' }); setShowModal(true); };
 
+  // Envía el formulario para crear o actualizar un paciente
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.firstName || !form.lastName || !form.dni) return toast.error('Nombre, apellido y DNI son obligatorios');

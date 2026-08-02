@@ -4,6 +4,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiMail, FiLock } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
+/**
+ * Página de inicio de sesión exclusiva para Pacientes.
+ * Utiliza DNI y correo en lugar de contraseña.
+ */
 export default function PatientLogin() {
   const [dni, setDni] = useState('');
   const [email, setEmail] = useState('');
@@ -11,10 +15,12 @@ export default function PatientLogin() {
   const { patientLogin } = useAuth();
   const navigate = useNavigate();
 
+  // Maneja el inicio de sesión del paciente
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Llama a la función patientLogin del AuthContext
       await patientLogin(dni, email);
       toast.success('Bienvenido al Portal del Paciente');
       navigate('/portal');

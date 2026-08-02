@@ -1,3 +1,7 @@
+/**
+ * Contexto de Autenticación de la aplicación.
+ * Maneja el estado global del usuario (sesión iniciada, rol, tokens).
+ */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/api';
 
@@ -10,9 +14,12 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  // Estado para almacenar la información del usuario actual
   const [user, setUser] = useState(null);
+  // Estado para saber si se está validando la sesión al cargar
   const [loading, setLoading] = useState(true);
 
+  // Efecto que se ejecuta al montar la app para recuperar la sesión guardada
   useEffect(() => {
     const token = localStorage.getItem('turnotopia_token');
     const savedUser = localStorage.getItem('turnotopia_user');
@@ -24,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Función principal para iniciar sesión de personal médico/admin
   const login = async (email, password) => {
     const { data } = await authService.login({ email, password });
     if (data.success) {
@@ -54,6 +62,7 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Cierra la sesión y limpia el almacenamiento local
   const logout = () => {
     localStorage.removeItem('turnotopia_token');
     localStorage.removeItem('turnotopia_user');

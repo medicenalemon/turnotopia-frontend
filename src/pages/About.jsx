@@ -1,5 +1,8 @@
 import { FiMail, FiGlobe, FiGithub, FiLinkedin } from 'react-icons/fi';
 
+/**
+ * Página informativa "Acerca de" que muestra la versión del software y créditos del autor.
+ */
 export default function About() {
   return (
     <div className="page fade-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 128px)' }}>

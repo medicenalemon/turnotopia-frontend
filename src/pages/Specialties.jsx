@@ -3,6 +3,9 @@ import { specialtyService } from '../services/api';
 import toast from 'react-hot-toast';
 import { FiPlus, FiEdit2, FiTrash2, FiGrid } from 'react-icons/fi';
 
+/**
+ * Página de configuración de Especialidades Médicas.
+ */
 export default function Specialties() {
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,6 +25,7 @@ export default function Specialties() {
   const openCreate = () => { setEditing(null); setForm({ name: '', description: '', defaultSlotDuration: 30 }); setShowModal(true); };
   const openEdit = (s) => { setEditing(s); setForm({ name: s.name, description: s.description || '', defaultSlotDuration: s.defaultSlotDuration }); setShowModal(true); };
 
+  // Crear o actualizar especialidad
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name) return toast.error('El nombre es obligatorio');

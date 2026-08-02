@@ -1,3 +1,7 @@
+/**
+ * Módulo de Sala de Espera (Vista Staff).
+ * Muestra el flujo de pacientes en tiempo real (check-in, esperando, en consulta).
+ */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { appointmentService } from '../services/api';
 import toast from 'react-hot-toast';
@@ -9,6 +13,9 @@ const WR_STATUS = {
   attended: { label: 'Atendido', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
 };
 
+/**
+ * Componente auxiliar para calcular el tiempo transcurrido en vivo.
+ */
 function TimeElapsed({ since, until }) {
   const [elapsed, setElapsed] = useState('');
   const intervalRef = useRef(null);
@@ -49,6 +56,7 @@ export default function WaitingRoom() {
   const [loading, setLoading] = useState(true);
   const [showQR, setShowQR] = useState(false);
 
+  // Obtiene los datos en vivo de los pacientes agendados hoy
   const fetchData = useCallback(async () => {
     try {
       const { data } = await appointmentService.getWaitingRoom();
@@ -65,6 +73,7 @@ export default function WaitingRoom() {
     return () => clearInterval(t);
   }, [fetchData]);
 
+  // Manejadores de cambios de estado (recepcionista/médico)
   const handleCheckin = async (id) => {
     try { await appointmentService.checkin(id); toast.success('Check-in realizado'); fetchData(); }
     catch { toast.error('Error en check-in'); }

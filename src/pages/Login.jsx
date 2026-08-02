@@ -4,6 +4,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 
+/**
+ * Página de inicio de sesión para administradores y médicos.
+ */
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,11 +14,13 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Maneja el envío del formulario de login
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return toast.error('Complete todos los campos');
     setLoading(true);
     try {
+      // Llama a la función login del AuthContext
       await login(email, password);
       toast.success('¡Bienvenido a Turnotopia!');
       navigate('/');

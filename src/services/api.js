@@ -1,16 +1,22 @@
+/**
+ * Configuración central de Axios para realizar llamadas a la API backend.
+ */
 import axios from 'axios';
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
+// Interceptor de Peticiones: Adjunta el token JWT a cada llamada si existe
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('turnotopia_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
+// Interceptor de Respuestas: Maneja errores globales, como sesión expirada
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Si la API devuelve error 401 (No Autorizado), forzamos el cierre de sesión
     if (error.response?.status === 401) {
       localStorage.removeItem('turnotopia_token');
       localStorage.removeItem('turnotopia_user');
@@ -19,6 +25,9 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// --- SERVICIOS DE LA API ---
+// Cada objeto agrupa las llamadas a un módulo específico del backend
 
 export const authService = {
   login: (data) => api.post('/auth/login', data),

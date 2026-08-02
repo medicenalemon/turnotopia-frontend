@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { FiCheckCircle, FiUser, FiAlertCircle } from 'react-icons/fi';
 import { publicService } from '../services/api';
 
+/**
+ * Página pública de "Fila Virtual" donde el paciente ingresa su DNI para anunciarse al llegar.
+ */
 export default function CheckIn() {
   const [dni, setDni] = useState('');
   const [loading, setLoading] = useState(false);
   const [successData, setSuccessData] = useState(null);
   const [error, setError] = useState(null);
 
+  // Envía la petición de check-in utilizando el DNI ingresado
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

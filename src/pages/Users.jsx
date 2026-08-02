@@ -15,6 +15,10 @@ const ROLE_COLORS = {
   receptionist: '#10b981'
 };
 
+/**
+ * Página de gestión de Usuarios del Sistema (Admin solo).
+ * Control de acceso y roles de la plataforma.
+ */
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +60,7 @@ export default function Users() {
     setShowModal(true);
   };
 
+  // Maneja la creación o actualización de los accesos de usuario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.role) {

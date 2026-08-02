@@ -1,3 +1,7 @@
+/**
+ * Layout específico para el portal del paciente.
+ * Contiene una cabecera simplificada y el área de contenido centrada.
+ */
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { FiLogOut } from 'react-icons/fi';
