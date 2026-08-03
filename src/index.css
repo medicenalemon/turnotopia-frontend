@@ -210,7 +210,7 @@ a:hover { color: var(--primary-light); }
 
 /* ===== SEARCH BAR ===== */
 .search-bar { position: relative; }
-.search-bar input { padding-left: 40px; min-width: 280px; }
+.search-bar input.form-input { padding-left: 40px; min-width: 280px; }
 .search-bar-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
 
 /* ===== FILTERS ===== */
@@ -243,7 +243,7 @@ a:hover { color: var(--primary-light); }
   .filters .form-select, .filters .form-input, .filters > div { width: 100%; min-width: auto; }
   
   /* Adjust search bar width */
-  .search-bar input { min-width: auto; width: 100%; }
+  .search-bar input.form-input { min-width: auto; width: 100%; }
   
   /* Reduce modal paddings for mobile */
   .modal-overlay { padding: 12px; }
