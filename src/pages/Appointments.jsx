@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { appointmentService, doctorService, patientService, specialtyService } from '../services/api';
 import toast from 'react-hot-toast';
-import { FiPlus, FiCalendar, FiSearch, FiFilter } from 'react-icons/fi';
+import { FiPlus, FiCalendar, FiSearch, FiFilter, FiDownload } from 'react-icons/fi';
 import { format } from 'date-fns';
+import { jsPDF } from 'jspdf';
 
 const STATUS = {
   scheduled: { label: 'Programado', cls: 'badge-scheduled' },
@@ -38,6 +39,13 @@ export default function Appointments() {
   const [patientSearch, setPatientSearch] = useState('');
   const [availableSlots, setAvailableSlots] = useState([]);
   const [newApt, setNewApt] = useState({ patient: '', doctor: '', specialty: '', date: format(new Date(), 'yyyy-MM-dd'), startTime: '', endTime: '', reason: '' });
+  
+  // Modals for prescription
+  const [prescriptionModal, setPrescriptionModal] = useState({ show: false, aptId: null, text: '' });
+  
+  const userStr = localStorage.getItem('turnotopia_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const isDoctor = user?.role === 'doctor';
 
   // Obtiene la lista de turnos aplicando los filtros actuales (fecha, médico, estado)
   const fetchAppointments = useCallback(async () => {
@@ -79,11 +87,26 @@ export default function Appointments() {
 
   // Cambia el estado de un turno específico (ej. de Programado a Confirmado)
   const changeStatus = async (id, status) => {
+    if (status === 'completed') {
+      setPrescriptionModal({ show: true, aptId: id, text: '' });
+      return;
+    }
+    
     try {
       await appointmentService.updateStatus(id, status);
       toast.success(`Estado: ${STATUS[status]?.label}`);
       fetchAppointments();
     } catch { toast.error('Error actualizando estado'); }
+  };
+
+  const handleCompleteWithPrescription = async (e) => {
+    e.preventDefault();
+    try {
+      await appointmentService.updateStatus(prescriptionModal.aptId, 'completed', prescriptionModal.text);
+      toast.success('Turno completado y receta guardada');
+      setPrescriptionModal({ show: false, aptId: null, text: '' });
+      fetchAppointments();
+    } catch { toast.error('Error completando turno'); }
   };
 
   const openCreate = () => {
@@ -102,6 +125,39 @@ export default function Appointments() {
     } catch (err) { toast.error(err.response?.data?.message || 'Error creando turno'); }
   };
 
+  const handleDownloadRecipe = (apt) => {
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor(0, 207, 232);
+    doc.text('turnotopia', 20, 20);
+    
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Receta Médica Digital', 20, 35);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Fecha de emisión: ${new Date(apt.date).toLocaleDateString('es-AR')}`, 20, 45);
+    doc.text(`Paciente: ${apt.patient?.firstName} ${apt.patient?.lastName}`, 20, 55);
+    doc.text(`Médico: ${apt.doctor?.user?.name}`, 20, 65);
+    doc.text(`Especialidad: ${apt.doctor?.specialty?.name}`, 20, 75);
+    
+    doc.setLineWidth(0.5);
+    doc.line(20, 80, 190, 80);
+    
+    doc.setFont("helvetica", "bold");
+    doc.text('Prescripción:', 20, 95);
+    doc.setFont("helvetica", "normal");
+    const splitText = doc.splitTextToSize(apt.prescription || 'Sin prescripciones indicadas.', 170);
+    doc.text(splitText, 20, 105);
+    
+    doc.text('Firma digital del profesional médica validada por el sistema.', 20, 260);
+    
+    doc.save(`Receta_${apt.patient?.lastName}_${apt.date.split('T')[0]}.pdf`);
+    toast.success('Receta descargada');
+  };
+
   const filteredDoctors = newApt.specialty ? doctors.filter(d => d.specialty?._id === newApt.specialty) : doctors;
 
   return (
@@ -114,10 +170,12 @@ export default function Appointments() {
       <div className="filters">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', fontSize: '0.85rem' }}><FiFilter /> Filtros:</div>
         <input className="form-input" type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} style={{ width: 170, minWidth: 'auto' }} id="filter-date" />
-        <select className="form-select" value={filterDoctor} onChange={e => setFilterDoctor(e.target.value)} id="filter-doctor">
-          <option value="">Todos los médicos</option>
-          {doctors.map(d => <option key={d._id} value={d._id}>{d.user?.name}</option>)}
-        </select>
+        {!isDoctor && (
+          <select className="form-select" value={filterDoctor} onChange={e => setFilterDoctor(e.target.value)} id="filter-doctor">
+            <option value="">Todos los médicos</option>
+            {doctors.map(d => <option key={d._id} value={d._id}>{d.user?.name}</option>)}
+          </select>
+        )}
         <select className="form-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)} id="filter-status">
           <option value="">Todos los estados</option>
           {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
@@ -148,6 +206,11 @@ export default function Appointments() {
                           {STATUS[s]?.label}
                         </button>
                       ))}
+                      {a.status === 'completed' && isDoctor && (
+                        <button className="btn btn-sm btn-ghost" onClick={() => handleDownloadRecipe(a)} style={{ fontSize: '0.75rem' }}>
+                          <FiDownload /> Receta
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -225,6 +288,28 @@ export default function Appointments() {
               <div className="modal-footer">
                 <button type="button" className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancelar</button>
                 <button type="submit" className="btn btn-primary">Crear Turno</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {prescriptionModal.show && (
+        <div className="modal-overlay" onClick={() => setPrescriptionModal({ show: false, aptId: null, text: '' })}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 500 }}>
+            <div className="modal-header">
+              <h2 className="modal-title">Completar Turno y Receta</h2>
+              <button className="modal-close" onClick={() => setPrescriptionModal({ show: false, aptId: null, text: '' })}>✕</button>
+            </div>
+            <form onSubmit={handleCompleteWithPrescription}>
+              <div className="form-group">
+                <label className="form-label">Receta Médica (opcional)</label>
+                <textarea className="form-textarea" placeholder="Ej: Ibuprofeno 600mg - Tomar 1 cada 8 horas..." value={prescriptionModal.text} onChange={e => setPrescriptionModal(prev => ({ ...prev, text: e.target.value }))} style={{ minHeight: '120px' }}></textarea>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 4 }}>Esta receta estará disponible para ser descargada por el paciente.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-ghost" onClick={() => setPrescriptionModal({ show: false, aptId: null, text: '' })}>Cancelar</button>
+                <button type="submit" className="btn btn-primary">Completar y Guardar</button>
               </div>
             </form>
           </div>

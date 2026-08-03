@@ -52,7 +52,10 @@ export default function PatientPortal() {
     doc.setFont("helvetica", "bold");
     doc.text('Prescripción:', 20, 95);
     doc.setFont("helvetica", "normal");
-    doc.text('Ibuprofeno 600mg - Tomar 1 comprimido cada 8 horas por 5 días.', 20, 105);
+    
+    // Auto-wrap the prescription text
+    const splitText = doc.splitTextToSize(apt.prescription || 'Sin prescripciones indicadas.', 170);
+    doc.text(splitText, 20, 105);
     
     doc.text('Firma digital del profesional médica validada por el sistema.', 20, 260);
     
@@ -95,7 +98,12 @@ export default function PatientPortal() {
                     <div className="appt-meta">
                       <span><FiClock /> {apt.startTime} hs</span>
                       <span className={`status-badge status-${apt.status}`}>
-                        {apt.status === 'scheduled' ? 'Programado' : apt.status === 'confirmed' ? 'Confirmado' : 'En proceso'}
+                        {apt.status === 'scheduled' ? 'Programado' : 
+                         apt.status === 'confirmed' ? 'Confirmado' : 
+                         apt.status === 'in-progress' ? 'En proceso' : 
+                         apt.status === 'completed' ? 'Completado' : 
+                         apt.status === 'cancelled' ? 'Cancelado' : 
+                         apt.status === 'no-show' ? 'Ausente' : apt.status}
                       </span>
                     </div>
                   </div>
@@ -120,7 +128,12 @@ export default function PatientPortal() {
                     <h3>{apt.doctor?.user?.name}</h3>
                     <p className="appt-specialty">{apt.doctor?.specialty?.name} • {new Date(apt.date).toLocaleDateString('es-AR')}</p>
                     <span className={`status-badge status-${apt.status}`} style={{ display: 'inline-block', marginTop: '8px' }}>
-                      {apt.status === 'completed' ? 'Completado' : apt.status === 'cancelled' ? 'Cancelado' : 'Ausente'}
+                      {apt.status === 'scheduled' ? 'Programado' : 
+                       apt.status === 'confirmed' ? 'Confirmado' : 
+                       apt.status === 'in-progress' ? 'En proceso' : 
+                       apt.status === 'completed' ? 'Completado' : 
+                       apt.status === 'cancelled' ? 'Cancelado' : 
+                       apt.status === 'no-show' ? 'Ausente' : apt.status}
                     </span>
                   </div>
                   {apt.status === 'completed' && (
